@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Оплата и бронирование — Санаторий Солнечный</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+:root{
+  --bg:#f6f1e8; --sand:#efe5d5; --card:rgba(255,255,255,.86);
+  --text:#1b2a25; --muted:#5b6a63; --line:rgba(27,42,37,.1);
+  --accent:#b88939; --accent-dark:#8e692a; --green:#3e6a58;
+  --hero:linear-gradient(135deg, rgba(18,28,24,.62), rgba(32,53,44,.34));
+  --shadow:0 20px 60px rgba(25,35,31,.12); --radius:28px; --max:1200px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:Inter,system-ui,sans-serif; color:var(--text); line-height:1.5;
+  background:radial-gradient(circle at top left, rgba(184,137,57,.10), transparent 26%),
+             radial-gradient(circle at right, rgba(62,106,88,.10), transparent 24%),
+             var(--bg);
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.container{width:min(calc(100% - 32px), var(--max)); margin:0 auto}
+.topbar{background:#1f312b;color:#f7f5ef;font-size:14px}
+.topbar-inner{display:flex;gap:12px 24px;justify-content:space-between;align-items:center;padding:10px 0;flex-wrap:wrap}
+.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(18px);background:rgba(246,241,232,.80);border-bottom:1px solid var(--line)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0}
+.brand{display:flex;align-items:center;gap:14px;font-weight:800;letter-spacing:.02em}
+.brand-badge{width:46px;height:46px;border-radius:50%;background:linear-gradient(145deg,#d7b06b,#a57521);display:grid;place-items:center;color:#fff;font-size:20px;box-shadow:inset 0 1px 6px rgba(255,255,255,.4)}
+.nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;color:var(--muted);font-weight:600;font-size:15px}
+.nav-links a:hover{color:var(--text)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  border:0;border-radius:999px;cursor:pointer;padding:14px 22px;font:inherit;font-weight:700;
+  transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#d5a755);color:#fff;box-shadow:0 14px 28px rgba(184,137,57,.22)}
+.btn-primary:hover{background:linear-gradient(135deg,var(--accent-dark),var(--accent))}
+.btn-secondary{background:rgba(255,255,255,.74);color:var(--text);border:1px solid var(--line)}
+section{padding:72px 0}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:24px;flex-wrap:wrap}
+.section-head h2{margin:0;font-family:"Playfair Display",serif;font-size:clamp(32px,4vw,50px);line-height:1.02;letter-spacing:-.03em}
+.section-head p{margin:0;max-width:640px;color:var(--muted);font-size:17px}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.55);box-shadow:var(--shadow);border-radius:var(--radius);overflow:hidden}
+.card-soft{padding:22px;background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.74))}
+.promo-grid,.program-grid,.room-grid,.profile-grid{display:grid;gap:18px}
+.promo-grid{grid-template-columns:repeat(4,1fr)}
+.program-grid{grid-template-columns:repeat(3,1fr)}
+.room-grid{grid-template-columns:repeat(3,1fr)}
+.profile-grid{grid-template-columns:repeat(4,1fr)}
+.promo-card{padding:22px;min-height:220px;color:#fff;display:flex;flex-direction:column;justify-content:end;position:relative;overflow:hidden}
+.promo-card::before{content:"";position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,.58), rgba(0,0,0,.08))}
+.promo-card>*{position:relative;z-index:1}
+.promo-1{background:url('https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=900&q=80') center/cover}
+.promo-2{background:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80') center/cover}
+.promo-3{background:url('https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=900&q=80') center/cover}
+.promo-4{background:url('https://images.unsplash.com/photo-1519824145371-296894a0daa9?auto=format&fit=crop&w=900&q=80') center/cover}
+.tag{display:inline-flex;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.2);width:fit-content;margin-bottom:14px;font-size:13px;font-weight:700;letter-spacing:.02em;text-transform:uppercase}
+.program-card img,.room-card img{aspect-ratio:16/11;object-fit:cover;width:100%}
+.program-content,.room-content{padding:20px}
+.features{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 0}
+.chip{padding:9px 12px;border-radius:999px;font-size:13px;background:rgba(62,106,88,.08);color:var(--green);border:1px solid rgba(62,106,88,.12);font-weight:600}
+.meta{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:14px;color:var(--muted);font-size:14px}
+.price{color:var(--accent-dark);font-weight:800;font-size:20px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:stretch}
+.about-image{min-height:100%;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.about-image img{width:100%;height:100%;object-fit:cover;min-height:440px}
+.list{display:grid;gap:12px;margin-top:16px;color:var(--muted)}
+.list div{display:flex;gap:12px;align-items:start;padding:12px 14px;background:rgba(255,255,255,.6);border-radius:16px;border:1px solid rgba(27,42,37,.06)}
+footer{padding:26px 0 40px;color:var(--muted)}
+.footer-box{padding-top:22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease, transform .65s ease}
+.reveal.show{opacity:1;transform:translateY(0)}
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@media (max-width:1080px){
+  .split{grid-template-columns:1fr}
+  .promo-grid{grid-template-columns:repeat(2,1fr)}
+  .program-grid{grid-template-columns:repeat(2,1fr)}
+  .room-grid{grid-template-columns:repeat(2,1fr)}
+  .profile-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:720px){
+  .nav-inner{align-items:start;flex-direction:column}
+  .nav-links{gap:14px;justify-content:start}
+  .promo-grid,.program-grid,.room-grid,.profile-grid{grid-template-columns:1fr}
+  section{padding:56px 0}
+}
+.hero{
+  position:relative; min-height:78vh; display:flex; align-items:center; overflow:clip;
+}
+.hero-bg{
+  position:absolute; inset:0;
+  background:var(--hero), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+  transform:scale(1.04);
+}
+.hero::after{content:"";position:absolute;inset:auto 0 0;height:160px;background:linear-gradient(to top,var(--bg),transparent)}
+.hero-grid{
+  position:relative; z-index:1; display:grid; grid-template-columns:1.25fr .75fr; gap:30px;
+  align-items:end; padding:72px 0 88px;
+}
+.hero-copy{color:#fff;padding-top:40px;animation:rise .8s ease both}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:8px 14px;font-size:14px;margin-bottom:18px;backdrop-filter:blur(8px)}
+h1{margin:0;font-family:"Playfair Display",serif;font-size:clamp(42px,7vw,78px);line-height:.98;letter-spacing:-.03em}
+.hero-copy p{max-width:680px;font-size:clamp(18px,2vw,22px);color:rgba(255,255,255,.88);margin:20px 0 28px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.hero-facts{display:flex;flex-wrap:wrap;gap:12px 18px;color:rgba(255,255,255,.9);font-weight:500;font-size:15px}
+.booking-card{
+  background:rgba(255,255,255,.88); border:1px solid rgba(255,255,255,.45);
+  border-radius:var(--radius); padding:26px; box-shadow:var(--shadow);
+  backdrop-filter:blur(18px); animation:rise .95s .08s ease both;
+}
+.booking-card h3{margin:0 0 6px;font-size:28px;font-family:"Playfair Display",serif}
+.booking-card p{margin:0 0 18px;color:var(--muted)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field label{display:block;font-size:14px;font-weight:600;margin-bottom:7px;color:var(--muted)}
+.field input,.field select{
+  width:100%; border:1px solid rgba(27,42,37,.12); background:rgba(255,255,255,.96);
+  border-radius:14px; padding:14px 14px; font:inherit; color:var(--text); outline:none;
+}
+.field input:focus,.field select:focus{border-color:rgba(184,137,57,.5);box-shadow:0 0 0 3px rgba(184,137,57,.12)}
+.calc{
+  margin-top:16px; padding:14px 16px; border-radius:16px;
+  background:linear-gradient(180deg, rgba(239,229,213,.7), rgba(255,255,255,.86));
+  border:1px solid rgba(27,42,37,.08); color:var(--muted); min-height:86px;
+}
+.notice{
+  margin-top:12px; font-size:13px; color:rgba(91,106,99,.95);
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div>Оплата и бронирование • Санаторий Солнечный</div>
+      <div>Email: sanatoriumsolnechny@mail.ru</div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand">
+        <div class="brand-badge">☀</div>
+        <div>
+          <div>Санаторий Солнечный</div>
+          <div style="font-size:12px;color:var(--muted);font-weight:600;">оплата и бронирование</div>
+        </div>
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html#rooms">Номера</a>
+        <a href="index.html#programs">Программы</a>
+        <a href="index.html#contacts">Контакты</a>
+      </div>
+
+      <a class="btn btn-secondary" href="index.html">На главную</a>
+    </div>
+  </nav>
+
+  <section>
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Оплата и бронирование</h2>
+        <p>Выберите номер, количество дней и способ оплаты. Отсканируйте QR-код для перехода на страницу оплаты ЮMoney. Сумма рассчитывается автоматически — оплатите на сумму, указанную ниже.</p>
+      </div>
+
+      <div class="booking-card reveal" style="max-width:720px;">
+        <h3>Данные брони</h3>
+        <p>Оплата безналичная: 50% сейчас и 50% при заезде, либо 100% со скидкой 20%.</p>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="guest">Имя гостя</label>
+            <input id="guest" type="text" placeholder="Например, Анна">
+          </div>
+          <div class="field">
+            <label for="days">Кол-во дней</label>
+            <input id="days" type="number" value="5" min="1" max="30">
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+  <div>
+    <label>Дата заезда</label>
+    <input type="date" id="checkin" class="input">
+  </div>
+  <div>
+    <label>Дата выезда</label>
+    <input type="date" id="checkout" class="input">
+  </div>
+</div>
+
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="room">Категория номера</label>
+          <select id="room">
+            <option value="3500">Эконом — 5 000 ₽/сутки</option>
+            <option value="4000">Стандарт — 7 000 ₽/сутки</option>
+            <option value="5000">Стандарт+ — 9 000 ₽/сутки</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="payment">Способ оплаты</label>
+          <select id="payment">
+            <option value="50">50% сейчас и 50% при заезде</option>
+            <option value="100">100% сейчас со скидкой 20%</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" style="width:100%;margin-top:6px;" onclick="calculate()">Рассчитать</button>
+        <div class="calc" id="calcResult">Выберите параметры, чтобы увидеть итог.</div>
+
+        <button class="btn btn-primary" style="width:100%;margin-top:12px;" onclick="calculate()">Обновить расчёт</button>
+        <div class="notice" id="payHint"></div>
+        <div class="card" style="margin-top:16px;padding:18px;border-radius:18px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+            <div style="font-weight:800;">Оплата по QR (ЮMoney)</div>
+            <div style="color:var(--muted);font-size:14px;">Кошелёк: <b>4100119485406485</b></div>
+          </div>
+          <div class="notice" style="margin-top:8px;">
+            Откройте камеру или приложение банка → сканируйте QR → подтвердите оплату на сумму <b id="qrAmount">0 ₽</b>.
+          </div>
+          <div id="qrCode" style="max-width:320px;margin:14px auto 6px;background:#fff;border-radius:18px;padding:12px;"><img src="yoomoney_qr.png" alt="Оплата ЮMoney по QR" style="width:100%;height:auto;display:block;"></div>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:10px 0 0;">
+            <a class="btn btn-secondary" href="index.html" style="padding:12px 18px;">На главную</a>
+          </div>
+
+<div style="margin-top:18px;padding:18px;border-radius:18px;background:#ffffff;border:1px solid #e6e6e6;">
+  <h3 style="margin-top:0;">Реквизиты для оплаты</h3>
+  <p><b>Получатель:</b> Санаторий «Солнечный»</p>
+  <p><b>Способ оплаты:</b> ЮMoney / перевод по QR</p>
+  <p><b>Номер кошелька:</b> 4100119485406485</p>
+  <p style="margin-top:10px;color:#555;">
+    В назначении платежа укажите: <b>ФИО и даты заезда</b>.<br>
+    После оплаты отправьте чек на <b>sanatoriumsolnechny@mail.ru</b>.
+  </p>
+</div>
+
+          <div class="notice" style="text-align:center;">
+            После оплаты сохраните чек и отправьте на <b>sanatoriumsolnechny@mail.ru</b>.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-box">
+      <div>© 2026 Санаторий Солнечный</div>
+      <div></div>
+    </div>
+  </footer>
+<script>
+const ACCOUNT = "4100119485406485";
+
+  function rub(n){ return Number(n).toLocaleString('ru-RU') + " ₽"; }
+
+  function calculateDaysFromDates(){
+    const checkin = document.getElementById("checkin")?.value;
+    const checkout = document.getElementById("checkout")?.value;
+    if(!checkin || !checkout) return;
+
+    const inDate = new Date(checkin);
+    const outDate = new Date(checkout);
+
+    const diff = Math.ceil((outDate - inDate) / (1000*60*60*24));
+    if(diff > 0){
+      document.getElementById("days").value = diff;
+    }
+  }
+
+
+  function escapeHtml(str){
+    return String(str)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function getRoomText() {
+    const sel = document.getElementById("room");
+    return sel.options[sel.selectedIndex].text;
+  }
+
+  function computeTotals() {
+    const daily = Number(document.getElementById("room").value);
+    const days = Number(document.getElementById("days").value);
+    const plan = document.getElementById("payment").value;
+
+    if (!Number.isFinite(days) || days < 1) return { ok:false, error:"Укажите корректное количество дней." };
+    if (!Number.isFinite(daily) || daily <= 0) return { ok:false, error:"Некорректная цена номера." };
+
+    const total = Math.round(daily * days);
+
+    if (plan === "50") {
+      const now = Math.round(total * 0.5);
+      const later = total - now;
+      return { ok:true, plan, daily, days, total, now, later };
+    } else {
+      const now = Math.round(total * 0.8);
+      const saved = total - now;
+      return { ok:true, plan, daily, days, total, now, saved };
+    }
+  }
+
+  function updateAmount(amountNow){
+    const el = document.getElementById("qrAmount");
+    if (el) el.textContent = amountNow ? rub(amountNow) : "0 ₽";
+  }
+
+  function buildYooMoneyPayUrl(amountRub){
+    // Ссылка оплаты ЮMoney с предзаполненной суммой (удобно для кнопки).
+    const targets = encodeURIComponent("Оплата бронирования — Санаторий Солнечный");
+    const label = encodeURIComponent("order-" + Date.now());
+    return "https://yoomoney.ru/quickpay/shop-widget" +
+      "?writer=seller" +
+      "&targets=" + targets +
+      "&targets-hint=" +
+      "&default-sum=" + encodeURIComponent(String(amountRub)) +
+      "&label=" + label +
+      "&button-text=12" +
+      "&payment-type-choice=on" +
+      "&hint=" +
+      "&successURL=" +
+      "&quickpay=shop" +
+      "&account=" + ACCOUNT;
+  }
+
+  function updateOpenPayButton(amountNow){
+    const btn = document.getElementById("openPayBtn");
+    if (!btn) return;
+    if (!amountNow) {
+      btn.setAttribute("href", "#");
+      btn.setAttribute("aria-disabled", "true");
+      btn.style.opacity = "0.6";
+      btn.style.pointerEvents = "none";
+      return;
+    }
+    btn.style.opacity = "1";
+    btn.style.pointerEvents = "auto";
+    btn.removeAttribute("aria-disabled");
+    btn.setAttribute("href", buildYooMoneyPayUrl(amountNow));
+  }
+
+  function calculate() {
+    calculateDaysFromDates();
+    const nameRaw = (document.getElementById("guest").value || "").trim();
+    const guest = nameRaw ? nameRaw : "гость";
+    const out = document.getElementById("calcResult");
+    const hint = document.getElementById("payHint");
+    if (hint) hint.textContent = "";
+
+    const t = computeTotals();
+    if (!t.ok) { out.textContent = t.error; updateAmount(0); updateOpenPayButton(0); return; }
+
+    const roomText = getRoomText();
+
+    if (t.plan === "50") {
+      out.innerHTML =
+        "<strong>Итог:</strong><br>" +
+        "Гость: <strong>" + escapeHtml(guest) + "</strong><br>" +
+        "Номер: <strong>" + escapeHtml(roomText) + "</strong><br>" +
+        "Полная стоимость: <strong>" + rub(t.total) + "</strong><br>" +
+        "Сейчас к оплате: <strong>" + rub(t.now) + "</strong><br>" +
+        "При заезде: <strong>" + rub(t.later) + "</strong>";
+    } else {
+      out.innerHTML =
+        "<strong>Итог:</strong><br>" +
+        "Гость: <strong>" + escapeHtml(guest) + "</strong><br>" +
+        "Номер: <strong>" + escapeHtml(roomText) + "</strong><br>" +
+        "К оплате сейчас (−20%): <strong>" + rub(t.now) + "</strong><br>" +
+        "Экономия: <strong>" + rub(t.saved) + "</strong>";
+    }
+
+    updateAmount(t.now);
+    updateOpenPayButton(t.now);
+  }
+
+  function bindAutoCalc() {
+    ["guest","days","room","payment","checkin","checkout"].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener("input", calculate);
+      el.addEventListener("change", calculate);
+    });
+  }
+
+  function applyUrlParams(){
+    const p = new URLSearchParams(window.location.search);
+
+    const guest = p.get("guest");
+    const days = p.get("days");
+    const room = p.get("room");
+    const plan = p.get("plan");
+
+    if (guest) document.getElementById("guest").value = guest;
+
+    if (days && Number(days) >= 1) document.getElementById("days").value = String(days);
+
+    if (room) {
+      const sel = document.getElementById("room");
+      const wanted = String(room);
+      for (const opt of sel.options) {
+        if (String(opt.value) === wanted) { sel.value = wanted; break; }
+      }
+    }
+
+    if (plan === "50" || plan === "100") {
+      document.getElementById("payment").value = plan;
+    }
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("show");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+  applyUrlParams();
+  bindAutoCalc();
+  calculate();
+</script>
+</body>
