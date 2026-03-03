@@ -133,6 +133,20 @@ h1{margin:0;font-family:"Playfair Display",serif;font-size:clamp(42px,7vw,78px);
   margin-top:12px; font-size:13px; color:rgba(91,106,99,.95);
 }
 </style>
+
+<style>
+  /* animated amount */
+  .amount-anim {
+    display:inline-block;
+    transition: transform .25s ease, filter .25s ease;
+    will-change: transform;
+  }
+  .amount-anim.bump {
+    transform: translateY(-1px) scale(1.06);
+    filter: brightness(1.05);
+  }
+</style>
+
 </head>
 <body>
   <div class="topbar">
@@ -224,7 +238,7 @@ h1{margin:0;font-family:"Playfair Display",serif;font-size:clamp(42px,7vw,78px);
             <div style="color:var(--muted);font-size:14px;">Кошелёк: <b>4100119485406485</b></div>
           </div>
           <div class="notice" style="margin-top:8px;">
-            Откройте камеру или приложение банка → сканируйте QR → подтвердите оплату на сумму <b id="qrAmount">0 ₽</b>.
+            Откройте камеру или приложение банка → сканируйте QR → подтвердите оплату на сумму <b id="qrAmount" class="amount-anim">0 ₽</b>.
           </div>
           <div id="qrCode" style="max-width:320px;margin:14px auto 6px;background:#fff;border-radius:18px;padding:12px;"><img src="yoomoney_qr.png" alt="Оплата ЮMoney по QR" style="width:100%;height:auto;display:block;"></div>
           <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:10px 0 0;">
@@ -310,12 +324,52 @@ const ACCOUNT = "4100119485406485";
     }
   }
 
-  function updateAmount(amountNow){
-    const el = document.getElementById("qrAmount");
-    if (el) el.textContent = amountNow ? rub(amountNow) : "0 ₽";
+  
+  // плавная анимация изменения суммы
+  let __amountAnimRAF = null;
+  let __amountLast = 0;
+
+  function animateNumber(el, from, to, durationMs){
+    if (!el) return;
+    if (__amountAnimRAF) cancelAnimationFrame(__amountAnimRAF);
+
+    const start = performance.now();
+    const diff = to - from;
+
+    // небольшая "пружинка" на старте
+    el.classList.add("bump");
+    window.setTimeout(() => el.classList.remove("bump"), 260);
+
+    function step(now){
+      const t = Math.min(1, (now - start) / durationMs);
+      // easeOutCubic
+      const eased = 1 - Math.pow(1 - t, 3);
+      const val = Math.round(from + diff * eased);
+      el.textContent = val ? rub(val) : "0 ₽";
+      if (t < 1) {
+        __amountAnimRAF = requestAnimationFrame(step);
+      } else {
+        __amountAnimRAF = null;
+      }
+    }
+    __amountAnimRAF = requestAnimationFrame(step);
   }
 
-  function buildYooMoneyPayUrl(amountRub){
+  function updateAmount(amountNow){
+    const el = document.getElementById("qrAmount");
+    const next = amountNow ? Number(amountNow) : 0;
+    const prev = Number(__amountLast) || 0;
+
+    // если первый раз — без долгой анимации
+    if (!prev && prev !== next) {
+      el && (el.textContent = next ? rub(next) : "0 ₽");
+      __amountLast = next;
+      return;
+    }
+    animateNumber(el, prev, next, 550);
+    __amountLast = next;
+  }
+function buildYooMoneyPayUrl(amountRub){
     // Ссылка оплаты ЮMoney с предзаполненной суммой (удобно для кнопки).
     const targets = encodeURIComponent("Оплата бронирования — Санаторий Солнечный");
     const label = encodeURIComponent("order-" + Date.now());
