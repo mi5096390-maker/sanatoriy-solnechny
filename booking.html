@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Оплата и бронирование — Санаторий Солнечный</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
@@ -133,21 +132,24 @@ h1{margin:0;font-family:"Playfair Display",serif;font-size:clamp(42px,7vw,78px);
   margin-top:12px; font-size:13px; color:rgba(91,106,99,.95);
 }
 </style>
+<meta name="theme-color" content="#f6f4ef">
+<title>Оплата и бронирование — Санаторий Солнечный (Улан-Удэ)</title>
+<meta name="description" content="Бронирование и оплата путёвки в санаторий «Солнечный» (Улан-Удэ). Расчёт стоимости, выбор дат заезда и выезда, оплата по QR (ЮMoney).">
+<meta name="keywords" content="санаторий улан удэ, санаторий бурятия, лечение улан удэ, отдых бурятия, санаторий солнечный, верхняя берёзовка">
+<link rel="canonical" href="https://mi5096390-maker.github.io/sanatoriy-solnechny/booking.html">
+<meta property="og:title" content="Оплата и бронирование — Санаторий Солнечный (Улан-Удэ)">
+<meta property="og:description" content="Бронирование и оплата путёвки в санаторий «Солнечный» (Улан-Удэ). Расчёт стоимости, выбор дат заезда и выезда, оплата по QR (ЮMoney).">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mi5096390-maker.github.io/sanatoriy-solnechny/booking.html">
+<meta property="og:image" content="https://mi5096390-maker.github.io/sanatoriy-solnechny/images/territory.jpg">
+<link rel="icon" type="image/png" href="favicon.png">
+
+<!-- Yandex.Metrika counter: вставьте ваш код счётчика сюда -->
 
 <style>
-  /* animated amount */
-  .amount-anim {
-    display:inline-block;
-    transition: transform .25s ease, filter .25s ease;
-    will-change: transform;
-  }
-  .amount-anim.bump {
-    transform: translateY(-1px) scale(1.06);
-    filter: brightness(1.05);
-  }
+  .amount-anim{display:inline-block;transition:transform .25s ease,filter .25s ease;will-change:transform}
+  .amount-anim.bump{transform:translateY(-1px) scale(1.06);filter:brightness(1.05)}
 </style>
-
-<link rel="icon" type="image/png" href="favicon.png">
 </head>
 <body>
   <div class="topbar">
@@ -333,25 +335,17 @@ const ACCOUNT = "4100119485406485";
   function animateNumber(el, from, to, durationMs){
     if (!el) return;
     if (__amountAnimRAF) cancelAnimationFrame(__amountAnimRAF);
-
     const start = performance.now();
     const diff = to - from;
-
-    // небольшая "пружинка" на старте
     el.classList.add("bump");
     window.setTimeout(() => el.classList.remove("bump"), 260);
-
     function step(now){
       const t = Math.min(1, (now - start) / durationMs);
-      // easeOutCubic
-      const eased = 1 - Math.pow(1 - t, 3);
+      const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
       const val = Math.round(from + diff * eased);
       el.textContent = val ? rub(val) : "0 ₽";
-      if (t < 1) {
-        __amountAnimRAF = requestAnimationFrame(step);
-      } else {
-        __amountAnimRAF = null;
-      }
+      if (t < 1) __amountAnimRAF = requestAnimationFrame(step);
+      else __amountAnimRAF = null;
     }
     __amountAnimRAF = requestAnimationFrame(step);
   }
@@ -360,8 +354,6 @@ const ACCOUNT = "4100119485406485";
     const el = document.getElementById("qrAmount");
     const next = amountNow ? Number(amountNow) : 0;
     const prev = Number(__amountLast) || 0;
-
-    // если первый раз — без долгой анимации
     if (!prev && prev !== next) {
       el && (el.textContent = next ? rub(next) : "0 ₽");
       __amountLast = next;

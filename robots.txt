@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Host: mi5096390-maker.github.io
+Sitemap: https://mi5096390-maker.github.io/sanatoriy-solnechny/sitemap.xml
